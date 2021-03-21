@@ -11,15 +11,15 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
-    async function handleSubmit(e) {
+    function handleSubmit(e) {
         e.preventDefault();
 
         setError('');
         setLoading(true);
-        await logIn(emailRef.current.value, passwordRef.current.value)
-            .then(() => history.push('/'))
-            .catch(setError);
-        setLoading(false);
+        logIn(emailRef.current.value, passwordRef.current.value)
+            .then(() => setLoading(false))
+            .then(() => history.push('/')) // TODO: push after currentUser has been set to avoid redirect
+            .catch(setError)
     }
 
     return (

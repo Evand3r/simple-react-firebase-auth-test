@@ -9,15 +9,12 @@ export default function Dashboard() {
     const { currentUser, logOut } = useAuth();
     const history = useHistory();
 
-    async function handleLogOut() {
+    function handleLogOut() {
         setError('');
 
-        try {
-            await logOut();
-            history.pushState('/login');
-        } catch {
-            setError('Failed to log out')
-        }
+        logOut()
+            .then(() => history.pushState('/login'))
+            .catch(setError)
     }
 
     return (
@@ -25,7 +22,7 @@ export default function Dashboard() {
             <Card>
                 <Card.Body>
                     <h2 className="text-center mb-4">Profile</h2>
-                    {error && <Alert variant="danger">{error}</Alert>}
+                    {error && <Alert variant="danger">{error.message}</Alert>}
                     <strong>Email:</strong> {currentUser.email}
                     <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
                         Update Profile
