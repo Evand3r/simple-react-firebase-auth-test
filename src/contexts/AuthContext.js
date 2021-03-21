@@ -9,9 +9,11 @@ export function useAuth() {
 
 export default function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState();
+    const [reqError, setReqError] = useState();
 
     function signUp(email, password) {
-        return auth.createUserWithEmailAndPassword(email, password);
+        setReqError('');
+        return auth.createUserWithEmailAndPassword(email, password).catch(err => setReqError(err));
     }
 
     useEffect(() => {
@@ -21,7 +23,9 @@ export default function AuthProvider({ children }) {
     }, []);
 
     const value = {
-        currentUser
+        currentUser,
+        signUp,
+        reqError,
     }
     return (
         <AuthContext.Provider value={value}>
