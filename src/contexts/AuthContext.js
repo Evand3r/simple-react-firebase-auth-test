@@ -9,21 +9,22 @@ export function useAuth() {
 
 export default function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState();
-    const [reqError, setReqError] = useState();
     const [loading, setLoading] = useState(true);
 
     function signUp(email, password) {
-        setReqError('');
-        return auth.createUserWithEmailAndPassword(email, password).catch(err => setReqError(err));
+        return auth.createUserWithEmailAndPassword(email, password);
     }
 
     function logIn(email, password) {
-        setReqError('');
-        return auth.signInWithEmailAndPassword(email, password).catch(err => setReqError(err));
+        return auth.signInWithEmailAndPassword(email, password);
     }
 
     function logOut() {
         return auth.signOut();
+    }
+
+    function resetPassword(email) {
+        return auth.sendPasswordResetEmail(email);
     }
 
     useEffect(() => {
@@ -39,10 +40,10 @@ export default function AuthProvider({ children }) {
     const value = {
         currentUser,
         signUp,
-        reqError,
         loading,
         logIn,
         logOut,
+        resetPassword,
     }
     return (
         <AuthContext.Provider value={value}>

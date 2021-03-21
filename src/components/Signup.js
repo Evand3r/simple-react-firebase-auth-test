@@ -7,7 +7,7 @@ export default function Signup() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
-    const { signUp, reqError } = useAuth();
+    const { signUp } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const history = useHistory();
@@ -16,18 +16,14 @@ export default function Signup() {
         e.preventDefault();
 
         if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-            return setError('Passwords do not match');
+            return setError({message: 'Passwords do not match'});
         }
 
-        try {
-            setError('');
-            setLoading(true);
-            await signUp(emailRef.current.value, passwordRef.current.value);
-            history.push('/');
-        } catch (error) {
-            setError('Failed to sign up');
-        }
-
+        setError('');
+        setLoading(true);
+        await signUp(emailRef.current.value, passwordRef.current.value)
+            .then(() => history.push('/'))
+            .catch(setError);
         setLoading(false);
     }
 
@@ -36,14 +32,11 @@ export default function Signup() {
             <Card>
                 <Card.Body>
                     <h2 className="text-center mb-4">Sign Up</h2>
-                    {
-                        (error && <Alert variant="danger">{error}</Alert>) ||
-                        (reqError && <Alert variant="danger">{reqError.message}</Alert>)
-                    }
+                    {error && <Alert variant="danger">{error.message}</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group id="email">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" ref={emailRef} required />
+                            <Form.Control type="text" ref={emailRef} required />
                         </Form.Group>
                         <Form.Group id="password">
                             <Form.Label>Password</Form.Label>
@@ -61,7 +54,7 @@ export default function Signup() {
             </Card>
             <div className="w-100 text-center mt-2">
                 Already have an account? <Link to="/login">Log In</Link>
-         </div>
+            </div>
         </>
     )
 }

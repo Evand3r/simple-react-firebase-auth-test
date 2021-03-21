@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 export default function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
-    const { logIn, reqError } = useAuth();
+    const { logIn } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const history = useHistory();
@@ -14,15 +14,11 @@ export default function Login() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        try {
-            setError('');
-            setLoading(true);
-            await logIn(emailRef.current.value, passwordRef.current.value);
-            history.push('/');
-        } catch (error) {
-            setError('Failed to log in');
-        }
-
+        setError('');
+        setLoading(true);
+        await logIn(emailRef.current.value, passwordRef.current.value)
+            .then(() => history.push('/'))
+            .catch(setError);
         setLoading(false);
     }
 
@@ -31,10 +27,7 @@ export default function Login() {
             <Card>
                 <Card.Body>
                     <h2 className="text-center mb-4">Log In</h2>
-                    {
-                        (error && <Alert variant="danger">{error}</Alert>) ||
-                        (reqError && <Alert variant="danger">{reqError.message}</Alert>)
-                    }
+                    {error && <Alert variant="danger">{error.message}</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group id="email">
                             <Form.Label>Email</Form.Label>
@@ -48,11 +41,14 @@ export default function Login() {
                             Log In
                         </Button>
                     </Form>
+                    <div className="w-100 text-center mt-3">
+                        <Link to="/forgot-password">Forgot Password?</Link>
+                    </div>
                 </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">
                 Need an account? <Link to="/signup">Sign Up</Link>
-         </div>
+            </div>
         </>
     )
 }
