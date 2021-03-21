@@ -10,6 +10,7 @@ export function useAuth() {
 export default function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState();
     const [reqError, setReqError] = useState();
+    const [loading, setLoading] = useState(true);
 
     function signUp(email, password) {
         setReqError('');
@@ -17,7 +18,11 @@ export default function AuthProvider({ children }) {
     }
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => setCurrentUser(user));
+        const unsubscribe = auth.onAuthStateChanged(
+            user => {
+                setCurrentUser(user);
+                setLoading(false);
+            });
 
         return unsubscribe;
     }, []);
@@ -26,10 +31,11 @@ export default function AuthProvider({ children }) {
         currentUser,
         signUp,
         reqError,
+        loading
     }
     return (
         <AuthContext.Provider value={value}>
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     )
 }

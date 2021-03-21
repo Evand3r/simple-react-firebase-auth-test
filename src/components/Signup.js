@@ -7,7 +7,7 @@ export default function Signup() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
-    const { signUp, currentUser, reqError } = useAuth();
+    const { signUp, reqError } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -34,7 +34,6 @@ export default function Signup() {
             <Card>
                 <Card.Body>
                     <h2 className="text-center mb-4">Sign Up</h2>
-                    {currentUser && JSON.stringify(currentUser.email)}
                     {
                         (error && <Alert variant="danger">{error}</Alert>) ||
                         (reqError && <Alert variant="danger">{reqError.message}</Alert>)
