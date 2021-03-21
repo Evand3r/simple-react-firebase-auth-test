@@ -22,6 +22,10 @@ export default function AuthProvider({ children }) {
         return auth.signInWithEmailAndPassword(email, password).catch(err => setReqError(err));
     }
 
+    function logOut() {
+        return auth.signOut();
+    }
+
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(
             user => {
@@ -37,7 +41,8 @@ export default function AuthProvider({ children }) {
         signUp,
         reqError,
         loading,
-        logIn
+        logIn,
+        logOut,
     }
     return (
         <AuthContext.Provider value={value}>
