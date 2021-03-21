@@ -1,3 +1,3 @@
-# Testing Auth method in Firebase with React
+# Testing Auth methods in Firebase with React
 
 Simple test.
